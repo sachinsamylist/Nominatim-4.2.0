@@ -1,0 +1,138 @@
+sudo -i
+sudo apt install -y python3-behave
+sudo apt install -y php-codesniffer
+sudo apt install -y phpunit
+sudo apt install -y pylint
+sudo python38 -m pip install -y python-dotenv
+sudo apt install -y osm2pgsql
+sudo apt  install -y cmake
+sudo snap install -y cmake 
+sudo apt install -y python3-pip
+sudo apt install -y acl
+sudo pip install -U pytest
+sudo apt install -y php-cgi unzip recode
+sudo apt install -y apache2 libapache2-mod-php
+sudo apt install -y net-tools
+sudo apt-get install -y osmctools
+
+sudo apt install -y php-cgi
+sudo apt install -y build-essential cmake g++ libboost-dev libboost-system-dev \
+                    libboost-filesystem-dev libexpat1-dev zlib1g-dev \
+                    libbz2-dev libpq-dev liblua5.3-dev lua5.3 \
+                    postgresql-server-dev-14 postgresql-14-postgis-3 \
+                    postgresql-contrib-14 postgresql-14-postgis-3-scripts \
+                    php-cli php-pgsql php-intl libicu-dev python3-dotenv \
+                    python3-psycopg2 python3-psutil python3-jinja2 \
+                    python3-icu python3-datrie
+
+sudo useradd -d /srv/nominatim -s /bin/bash -m nominatim
+
+export USERNAME=nominatim
+export USERHOME=/srv/nominatim
+
+visudo
+%admin1 ALL=(ALL) ALL
+%nominatim ALL=(ALL)  ALL
+%postgres ALL=(ALL)  ALL
+
+chmod a+x $USERHOME
+sudo setfacl -R -m u:postgres:rwx /srv/nominatim/
+
+sudo systemctl restart postgresql
+sudo -u postgres -i
+sudo -u postgres createuser -s $USERNAME
+sudo -u postgres createuser www-data
+
+su admin1
+
+sudo -i
+export USERNAME=nominatim
+export USERHOME=/srv/nominatim
+
+
+cd $USERHOME
+wget https://nominatim.org/release/Nominatim-4.2.0.tar.bz2
+tar xf Nominatim-4.2.0.tar.bz2
+
+mkdir build
+cd build
+sudo cmake /srv/nominatim/Nominatim-4.2.0
+sudo make
+sudo make install
+
+cd ..
+mkdir /srv/nominatim/nominatim-project
+mkdir /srv/nominatim/nominatim-project/website
+
+sudo setfacl -R -m u:nominatim:rwx /srv/nominatim/
+sudo setfacl -R -m u:postgres:rwx /srv/nominatim/
+
+mkdir nominatim-planet
+cd /srv/nominatim/nominatim-planet
+export PROJECT_DIR=/srv/nominatim/nominatim-planet
+
+cd $PROJECT_DIR
+wget https://www.nominatim.org/data/wikimedia-importance.sql.gz
+wget https://download.geofabrik.de/asia/india/north-eastern-zone-latest.osm.pbf
+
+## wget https://download.geofabrik.de/asia/india-latest.osm.pbf
+
+
+sudo -u postgres -i
+nano /etc/postgresql/14/main/postgresql.conf
+shared_buffers = 2GB
+maintenance_work_mem = 10GB
+autovacuum_work_mem = 2GB
+work_mem = 50MB
+effective_cache_size = 24GB
+synchronous_commit = off
+max_wal_size = 1GB
+checkpoint_timeout = 10min
+checkpoint_completion_target = 0.9
+
+su admin1
+sudo -i
+sudo systemctl restart postgresql
+sudo -u postgres -i
+cd /srv/nominatim/nominatim-planet
+## nominatim import --osm-file /srv/nominatim/nominatim-planet/india-latest.osm.pbf 2>&1 | tee setup.log
+
+nominatim import --osm-file /srv/nominatim/nominatim-planet/north-eastern-zone-latest.osm.pbf 2>&1 | tee setup.log
+
+
+nominatim admin --check-database
+nominatim import --continue indexing
+nominatim admin --check-database
+cd /srv/nominatim/nominatim-planet/
+
+nominatim refresh --wiki-data --importance 2>&1 | tee setup.log
+
+nominatim admin --check-database
+
+cp -r /var/lib/postgresql/website/ /srv/nominatim/nominatim-project/
+
+cp -r /srv/nominatim/nominatim-planet/website/ /srv/nominatim/nominatim-project/
+
+
+su admin1
+sudo -i
+
+sudo tee /etc/apache2/conf-available/nominatim.conf << EOFAPACHECONF
+<Directory "/srv/nominatim/nominatim-project/website">
+  Options FollowSymLinks MultiViews
+  AddType text/html   .php
+  DirectoryIndex search.php
+  Require all granted
+</Directory>
+
+Alias /nominatim /srv/nominatim/nominatim-project/website
+EOFAPACHECONF
+
+sudo a2enconf nominatim
+sudo systemctl restart apache2
+systemctl status apache2
+systemctl restart postgresql
+
+
+http://192.168.2.207/nominatim/status.php
+http://192.168.2.207/nominatim/reverse.php?format=jsonv2&lat=25.8472&lon=92.5743
