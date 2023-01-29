@@ -100,16 +100,12 @@ su admin1
 sudo -i
 sudo systemctl restart postgresql
 sudo -u postgres -i
-cd /srv/nominatim/nominatim-planet
-
+cd
 
 ## nominatim import --osm-file /srv/nominatim/nominatim-planet/india-latest.osm.pbf 2>&1 | tee setup.log
 
 nominatim import --osm-file /srv/nominatim/nominatim-planet/north-eastern-zone-latest.osm.pbf 2>&1 | tee setup.log
 
-cd
-
-nominatim import --osm-file /srv/nominatim/nominatim-planet/north-eastern-zone-latest.osm.pbf 2>&1 | tee setup.log
 
 nominatim admin --check-database
 nominatim import --continue indexing
