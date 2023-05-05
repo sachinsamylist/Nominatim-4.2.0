@@ -5,4 +5,5 @@
 ## For any support contact:
 ## Skype: Sachin.Samy
 ## WhatsApp: https://wa.me/918527117770
+## 
 Terminal commands: https://github.com/sachinsamylist/Nominatim-4.2.0/blob/main/Terminal%20commands
