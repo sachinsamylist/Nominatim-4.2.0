@@ -49,6 +49,7 @@ sudo -u postgres -i
 sudo -u postgres createuser -s $USERNAME
 sudo -u postgres createuser www-data
 
+## Instead of admin1 you should use the user from which you are longin like "root"
 su admin1
 
 sudo -i
@@ -81,6 +82,7 @@ cd $PROJECT_DIR
 wget https://www.nominatim.org/data/wikimedia-importance.sql.gz
 wget https://download.geofabrik.de/asia/india/north-eastern-zone-latest.osm.pbf
 
+## 
 ## wget https://download.geofabrik.de/asia/india-latest.osm.pbf
 
 
