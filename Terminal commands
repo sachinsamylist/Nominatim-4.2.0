@@ -39,6 +39,8 @@ sudo useradd -d /srv/nominatim -s /bin/bash -m nominatim
 export USERNAME=nominatim
 export USERHOME=/srv/nominatim
 
+## Instead of %admin1 you should use the user from which you are logged in like "root"
+
 visudo
 %admin1 ALL=(ALL) ALL
 %nominatim ALL=(ALL)  ALL
