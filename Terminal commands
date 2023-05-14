@@ -149,6 +149,7 @@ sudo systemctl restart apache2
 systemctl status apache2
 systemctl restart postgresql
 
+## Instead of using 192.168.2.207 you should use your server ip"
 
 http://192.168.2.207/nominatim/status.php
 http://192.168.2.207/nominatim/reverse.php?format=jsonv2&lat=25.8472&lon=92.5743
