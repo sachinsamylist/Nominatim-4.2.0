@@ -5,6 +5,8 @@
 ## For any support contact:
 ## Skype: Sachin.Samy
 ## WhatsApp: https://wa.me/918527117770
++++++++++++++++++++++++++
+
 
 If you already have imported data file and want to add another data file, you can use the add-data function to import the additional data as follows:
 
@@ -28,6 +30,10 @@ use below command to log on with the SQL user:
 
 sudo -u postgres -i
 
+Go to the location where the data file was downloaded:
+
+cd /srv/nominatim/nominatim-planet
+
 Use of below command to import the data:
 
 nominatim add-data sri-lanka-latest.osm.pbf
@@ -39,3 +45,6 @@ nominatim admin --check-database
 Run the block command to continue indexing
 
 nominatim import --continue indexing
+
+
+
