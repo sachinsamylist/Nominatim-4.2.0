@@ -44,9 +44,15 @@ nominatim add-data --file sri-lanka-latest.osm.pbf
 
 nominatim admin --check-database
 
-## Run the block command to continue indexing
+## type the below command
+
+cd 
+
+## Run the below command to continue indexing
 
 nominatim import --continue indexing
 
+## Use the following command to check the net long, where the xxx.xxx.xxx.xxx is the IP address of the server
 
+http://xxx.xxx.xxx.xxx/nominatim/reverse.php?format=jsonv2&lat=6.9271&lon=79.8612
 
