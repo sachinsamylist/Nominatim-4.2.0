@@ -12,37 +12,39 @@ If you already have imported data file and want to add another data file, you ca
 
 Ref: https://nominatim.org/release-docs/latest/admin/Advanced-Installations/
 
-Go to the location where you want to download the data file
+## Go to the location where you want to download the data file
+
 cd /srv/nominatim/nominatim-planet
 
-Copy the data file link from the below link
+## Copy the data file link from the below link
+
 https://download.geofabrik.de
 
-After link is copied enter the below command
+## After link is copied enter the below command
 
 wget https://download.geofabrik.de/asia/sri-lanka-latest.osm.pbf
 
-Once the file is download check the files in the directory use below command
+## Once the file is download check the files in the directory use below command
 
 dir
 
-use below command to log on with the SQL user:
+## Use below command to log on with the SQL user:
 
 sudo -u postgres -i
 
-Go to the location where the data file was downloaded:
+## Go to the location where the data file was downloaded:
 
 cd /srv/nominatim/nominatim-planet
 
-Use of below command to import the data:
+## Use of below command to import the data:
 
 nominatim add-data --file sri-lanka-latest.osm.pbf
 
-Once the data is important run the below command to check the database
+## Once the data is important run the below command to check the database
 
 nominatim admin --check-database
 
-Run the block command to continue indexing
+## Run the block command to continue indexing
 
 nominatim import --continue indexing
 
