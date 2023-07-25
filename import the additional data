@@ -36,7 +36,7 @@ cd /srv/nominatim/nominatim-planet
 
 Use of below command to import the data:
 
-nominatim add-data sri-lanka-latest.osm.pbf
+nominatim add-data --file sri-lanka-latest.osm.pbf
 
 Once the data is important run the below command to check the database
 
