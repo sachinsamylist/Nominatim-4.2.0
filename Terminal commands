@@ -7,6 +7,8 @@
 ## WhatsApp: https://wa.me/918527117770
 +++++++++++++++++++++++++
 
+sudo apt-get update
+
 sudo -i
 sudo apt install -y python3-behave
 sudo apt install -y php-codesniffer
@@ -153,6 +155,17 @@ systemctl restart postgresql
 
 http://192.168.2.207/nominatim/status.php
 http://192.168.2.207/nominatim/reverse.php?format=jsonv2&lat=25.8472&lon=92.5743
+
+SSL configuration if required
+First bind/point the your domain name with the server IP where your installed the nominatim.
+
+Install the python Cerbot module for Apache:
+
+apt-get -y install python3-certbot-apache
+
+Request certificate:
+
+certbot --apache --agree-tos --email youremailaddress@domain.com --no-eff-email -d YourDomain.com
 
 
 +++++++++++++++++++++++++
